@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import fire from './fire';
 import './App.css';
+import Message from './message';
 
 class App extends Component {
   constructor(props) {
@@ -29,25 +30,24 @@ class App extends Component {
   addMessage(e){
     e.preventDefault(); // <- prevent form submit from reloading the page
     /* Send the message to Firebase */
-    fire.database().ref('messages').push( {
-      message: this.inputEl.value}
-     );
+    fire.database().ref('messages').push( this.inputEl.value );
     this.inputEl.value = ''; // <- clear the input
+  }
+
+  removeMessage(e) {
+    //e.preventDefault();
+    alert ('Teste 2');
   }
 
   render() {
     return (
       <form onSubmit={this.addMessage.bind(this)}>
-        <input type="text" ref={ el => this.inputEl = el }/>
-        <input type="submit"/>
-        <ul>
-          <table border='1px'>
-          <tr><th>ID</th><th>Message</th></tr>
+        <input type="text" ref={ el => this.inputEl = el }/> 
+        <input type="submit"/> <br/> <br/>
           { /* Render the list of messages */
-            this.state.messages.map( message => <tr><td>{message.id}</td><td>{message.text}</td></tr> )
+            this.state.messages.map( message => 
+              <Message message={message.text} id={message.id} deleteHandle={this.removeMessage} /> )
           }
-          </table>
-        </ul>
       </form>
     );
   }
